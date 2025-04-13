@@ -15,6 +15,19 @@
         <exec.mainClass>pt.cjmach.utils.didgen.Launcher</exec.mainClass>
     </properties>
     
+    <scm>
+        <developerConnection>scm:git:git@github.com:cjmach/didgen</developerConnection>
+        <tag>HEAD</tag>
+    </scm>
+    
+    <distributionManagement>
+        <repository>
+            <id>github</id>
+            <name>GitHub Packages</name>
+            <url>https://maven.pkg.github.com/cjmach/didgen</url>
+        </repository>
+    </distributionManagement>
+    
     <repositories>
         <repository>
             <id>waltid</id>
