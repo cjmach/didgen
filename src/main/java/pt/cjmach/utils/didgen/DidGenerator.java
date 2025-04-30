@@ -64,16 +64,16 @@ public class DidGenerator {
         return generateDID(jwk);
     }
     
-    private static Continuation<DidResult> createContinuation() {
-        Continuation<DidResult> continuation = new Continuation<>() {
-            private final CompletableFuture<DidResult> future = new CompletableFuture<>();
+    private static <T> Continuation<T> createContinuation() {
+        Continuation<T> continuation = new Continuation<>() {
+            private final CompletableFuture<T> future = new CompletableFuture<>();
             
             @Override
             public void resumeWith(Object o) {
                 if (o instanceof Result.Failure failure) {
                     future.completeExceptionally(failure.exception);
                 } else {
-                    future.complete((DidResult) o);
+                    future.complete((T) o);
                 }
             }
 
