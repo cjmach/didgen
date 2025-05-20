@@ -26,6 +26,10 @@ public class Launcher implements Callable<Integer> {
             description = "Also output JSON Web Key (JWK) to stderr.")
     private boolean printJwk;
     
+    @Option(names = {"-m", "--method"}, defaultValue = "key",
+            description = "DID method to use.")
+    private String didMethod;
+    
     @Option(names = {"-v", "--version"}, versionHelp = true, description = "Print version and exit.")
     @SuppressWarnings("FieldMayBeFinal")
     private boolean versionRequested = false;
@@ -44,7 +48,7 @@ public class Launcher implements Callable<Integer> {
             if (printJwk) {
                 System.err.println(jwk.toJSONString());
             }
-            String did = generator.generateDID(jwk);
+            String did = generator.generateDID(jwk, didMethod);
             System.out.println(did);
             return 0;
         }

@@ -6,6 +6,7 @@ import id.walt.crypto.keys.jwk.JWKKey;
 import id.walt.did.dids.DidService;
 import id.walt.did.dids.registrar.DidResult;
 import id.walt.did.dids.registrar.dids.DidCreateOptions;
+import id.walt.did.dids.registrar.dids.DidJwkCreateOptions;
 import id.walt.did.dids.registrar.dids.DidKeyCreateOptions;
 import java.io.InputStream;
 import java.security.cert.CertificateException;
@@ -48,9 +49,21 @@ public class DidGenerator {
         return generateJWK(certificate);
     }
 
-    public String generateDID(JWK jwk) {
+    public String generateDID(JWK jwk, String method) {
         JWKKey key = new JWKKey(jwk);
-        DidCreateOptions options = new DidKeyCreateOptions(key.getKeyType(), true);
+        DidCreateOptions options;
+        switch (method) {
+            case "key":
+                options = new DidKeyCreateOptions(key.getKeyType(), true);
+                break;
+                
+            case "jwk":
+                options = new DidJwkCreateOptions(key.getKeyType());
+                break;
+                
+            default:
+                throw new IllegalArgumentException("Unsupported DID method: " + method);
+        }
         Continuation<DidResult> continuation = createContinuation();
         DidResult result = (DidResult) DidService.INSTANCE.registerByKey("key", key, options, continuation);
         if (result != null) {
@@ -59,9 +72,9 @@ public class DidGenerator {
         return null;
     }
     
-    public String generateDID(InputStream x509Input) throws CertificateException {
+    public String generateDID(InputStream x509Input, String method) throws CertificateException {
         JWK jwk = generateJWK(x509Input);
-        return generateDID(jwk);
+        return generateDID(jwk, method);
     }
     
     private static <T> Continuation<T> createContinuation() {
